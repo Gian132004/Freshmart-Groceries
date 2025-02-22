@@ -1,16 +1,14 @@
-package com.example.employee.model;
+package com.example.employeeservice.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
 @Data
-@Table(name = "employees")
+@Document(collection = "employees")
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
+    private String id;
     private String name;
     private String email;
     private String position;

@@ -1,9 +1,7 @@
-package com.example.employee.repository;
+package com.example.employeeservice.repository;
 
-import com.example.employee.model.Employee;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.example.employeeservice.model.Employee;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-@Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+public interface EmployeeRepository extends MongoRepository<Employee, String> {
 }

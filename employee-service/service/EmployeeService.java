@@ -1,7 +1,8 @@
-package com.example.employee.service;
+package com.example.employeeservice.service;
 
-import com.example.employee.model.Employee;
-import com.example.employee.repository.EmployeeRepository;
+import com.example.employeeservice.model.Employee;
+import com.example.employeeservice.repository.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,17 +10,14 @@ import java.util.Optional;
 
 @Service
 public class EmployeeService {
-    private final EmployeeRepository repository;
-
-    public EmployeeService(EmployeeRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private EmployeeRepository repository;
 
     public List<Employee> getAllEmployees() {
         return repository.findAll();
     }
 
-    public Optional<Employee> getEmployeeById(Long id) {
+    public Optional<Employee> getEmployeeById(String id) {
         return repository.findById(id);
     }
 
@@ -27,7 +25,7 @@ public class EmployeeService {
         return repository.save(employee);
     }
 
-    public void deleteEmployee(Long id) {
+    public void deleteEmployee(String id) {
         repository.deleteById(id);
     }
 }
