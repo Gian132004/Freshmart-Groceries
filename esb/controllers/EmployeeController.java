@@ -1,4 +1,4 @@
-package com.example.esb.controller;
+package controller;
 
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

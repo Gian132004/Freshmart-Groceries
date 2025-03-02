@@ -1,7 +1,7 @@
-package com.example.employeeservice.repository;
+package repository;
 
-import com.example.employeeservice.model.Employee;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import model.Employee;
 
 public interface EmployeeRepository extends MongoRepository<Employee, String> {
 }

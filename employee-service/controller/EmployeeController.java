@@ -1,36 +1,27 @@
-package com.example.employeeservice.controller;
+package controller; // Update package name
 
-import com.example.employeeservice.model.Employee;
-import com.example.employeeservice.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import model.Employee;
+import service.EmployeeService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
-    @Autowired
-    private EmployeeService service;
+    private final EmployeeService service;
+
+    public EmployeeController(EmployeeService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public List<Employee> getAllEmployees() {
         return service.getAllEmployees();
     }
 
-    @GetMapping("/{id}")
-    public Optional<Employee> getEmployeeById(@PathVariable String id) {
-        return service.getEmployeeById(id);
-    }
-
     @PostMapping
-    public Employee saveEmployee(@RequestBody Employee employee) {
-        return service.saveEmployee(employee);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteEmployee(@PathVariable String id) {
-        service.deleteEmployee(id);
+    public Employee addEmployee(@RequestBody Employee employee) {
+        return service.addEmployee(employee);
     }
 }

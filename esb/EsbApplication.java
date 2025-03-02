@@ -1,13 +1,11 @@
-package com.example.esb;
+package esb;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EsbApplication {
+public class ESBApplication {
     public static void main(String[] args) {
-        SpringApplication.run(EsbApplication.class, args);
+        SpringApplication.run(ESBApplication.class, args);
     }
 }
-
-
