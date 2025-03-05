@@ -1,8 +1,8 @@
-package controller; // Update package name
+package employeeservice.controller;  // ✅ Match package name
 
 import org.springframework.web.bind.annotation.*;
-import model.Employee;
-import service.EmployeeService;
+import employee_service.model.Employee;
+import employee_service.service.EmployeeService;
 
 import java.util.List;
 
@@ -13,6 +13,12 @@ public class EmployeeController {
 
     public EmployeeController(EmployeeService service) {
         this.service = service;
+    }
+
+    // ✅ Test if API is running
+    @GetMapping("/test")
+    public String testApi() {
+        return "Employee API is working!";
     }
 
     @GetMapping
