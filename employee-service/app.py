@@ -8,4 +8,5 @@ app.config.from_object('config.Config')
 app.register_blueprint(employee_routes)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5501, debug=True)  # ✅ Explicitly run on port 5501
+

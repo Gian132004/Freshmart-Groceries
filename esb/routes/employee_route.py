@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 
 employee_esb_routes = Blueprint('employee_esb_routes', __name__)
 
-EMPLOYEE_SERVICE_URL = "http://localhost:5001"  # Change port if needed
+EMPLOYEE_SERVICE_URL = "http://localhost:5501"  # Change port if needed
 
 @employee_esb_routes.route('/employees', methods=['GET'])
 def get_all_employees():
