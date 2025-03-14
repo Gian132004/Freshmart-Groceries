@@ -1,62 +1,61 @@
-from models import PersonalInfo
-from bson import ObjectId
+from mysql.connector import connect, Error
+from employee import Employee
+from datetime import datetime
 
 class EmployeeController:
-    @staticmethod
-    def create_employee(data):
+    def __init__(self, host, user, password, database):
+        self.db_config = {
+            'host': host,
+            'user': user,
+            'password': password,
+            'database': database
+        }
+    
+    def get_connection(self):
+        return connect(**self.db_config)
+    
+    def get_all_employees(self):
         try:
-            # Validate required fields
-            required_fields = ["name", "date_of_birth", "contact_number", "emergency_contact_number"]
-            for field in required_fields:
-                if field not in data:
-                    raise ValueError(f"Missing required field: {field}")
-
-            # Create and save the employee
-            employee = PersonalInfo(
-                name=data["name"],
-                date_of_birth=data["date_of_birth"],
-                contact_number=data["contact_number"],
-                emergency_contact_number=data["emergency_contact_number"]
-            )
-            employee.save()
-
-            # Return the created employee data
-            return {
-                "name": employee.name,
-                "date_of_birth": employee.date_of_birth,
-                "contact_number": employee.contact_number,
-                "emergency_contact_number": employee.emergency_contact_number
-            }
-        except Exception as e:
-            raise Exception(f"Error creating employee: {str(e)}")
-
-    @staticmethod
-    def get_employee_by_id(employee_id):
+            with self.get_connection() as connection:
+                with connection.cursor(dictionary=True) as cursor:
+                    cursor.execute("SELECT fullname, birthdate, address, contact_number, emergency_number FROM employees")
+                    results = cursor.fetchall()
+                    return [Employee(**{k: v if k != 'birthdate' else datetime.strptime(str(v), '%Y-%m-%d') 
+                                     for k, v in row.items()}) for row in results]
+        except Error as e:
+            print(f"Error: {e}")
+            return []
+    
+    def get_employee_by_name(self, fullname):
         try:
-            # Convert string ID to ObjectId
-            obj_id = ObjectId(employee_id)
-            employee = PersonalInfo.get_by_id(obj_id)
-            
-            if employee:
-                return {
-                    "name": employee.name,
-                    "date_of_birth": employee.date_of_birth,
-                    "contact_number": employee.contact_number,
-                    "emergency_contact_number": employee.emergency_contact_number
-                }
+            with self.get_connection() as connection:
+                with connection.cursor(dictionary=True) as cursor:
+                    cursor.execute("SELECT fullname, birthdate, address, contact_number, emergency_number FROM employees WHERE fullname = %s", (fullname,))
+                    result = cursor.fetchone()
+                    if result:
+                        return Employee(**{k: v if k != 'birthdate' else datetime.strptime(str(v), '%Y-%m-%d') 
+                                        for k, v in result.items()})
+                    return None
+        except Error as e:
+            print(f"Error: {e}")
             return None
-        except Exception as e:
-            raise Exception(f"Error fetching employee: {str(e)}")
-
-    @staticmethod
-    def get_all_employees():
+    
+    def create_employee(self, employee_data):
         try:
-            employees = PersonalInfo.get_all()
-            return [{
-                "name": emp["name"],
-                "date_of_birth": emp["date_of_birth"],
-                "contact_number": emp["contact_number"],
-                "emergency_contact_number": emp["emergency_contact_number"]
-            } for emp in employees]
-        except Exception as e:
-            raise Exception(f"Error fetching employees: {str(e)}")
+            with self.get_connection() as connection:
+                with connection.cursor() as cursor:
+                    sql = """INSERT INTO employees 
+                            (fullname, birthdate, address, contact_number, emergency_number) 
+                            VALUES (%s, %s, %s, %s, %s)"""
+                    cursor.execute(sql, (
+                        employee_data['fullname'],
+                        employee_data['birthdate'],
+                        employee_data['address'],
+                        employee_data['contact_number'],
+                        employee_data['emergency_number']
+                    ))
+                    connection.commit()
+                    return True
+        except Error as e:
+            print(f"Error: {e}")
+            return False
